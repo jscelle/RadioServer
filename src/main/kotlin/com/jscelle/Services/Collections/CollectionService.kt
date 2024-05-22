@@ -25,6 +25,8 @@ class CollectionService(private val connection: Connection) {
             "INSERT INTO application.CollectionItems (collection_name, item_id) VALUES (?, ?);"
         private const val UPDATE_COLLECTION_TITLE =
             "UPDATE application.Collections SET title = ? WHERE name = ?;"
+        private const val SELECT_COLLECTION_BY_NAME =
+            "SELECT name, title FROM application.Collections WHERE name = ?;"
     }
 
     init {
@@ -106,5 +108,20 @@ class CollectionService(private val connection: Connection) {
         statement.setString(1, newTitle)
         statement.setString(2, name)
         statement.executeUpdate()
+    }
+
+    suspend fun getCollectionByName(collectionName: String): List<Collection> = withContext(Dispatchers.IO) {
+        val statement = connection.prepareStatement(SELECT_COLLECTION_BY_NAME)
+        statement.setString(1, collectionName)
+        val resultSet = statement.executeQuery()
+
+        val collections = mutableListOf<Collection>()
+        while (resultSet.next()) {
+            val name = resultSet.getString("name")
+            val title = resultSet.getString("title")
+            collections.add(Collection(name, title))
+        }
+
+        return@withContext collections
     }
 }

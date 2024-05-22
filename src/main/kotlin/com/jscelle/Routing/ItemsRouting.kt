@@ -23,6 +23,13 @@ fun Application.itemsRouting(connection: Connection) {
             call.respond(HttpStatusCode.OK, collections)
         }
 
+        get("/collections/{collectionId}") {
+            val collectionId = call.parameters["collectionId"]
+                ?: throw IllegalArgumentException("Invalid Collection ID")
+            val collections = collectionService.getCollectionByName(collectionId)
+            call.respond(HttpStatusCode.OK, collections)
+        }
+
         // Get items by collection ID
         get("/items/{collectionId}") {
             val collectionId = call.parameters["collectionId"]

@@ -2,6 +2,7 @@ package com.jscelle
 
 import com.jscelle.Routing.itemsRouting
 import com.jscelle.Routing.purchaseRouting
+import com.jscelle.Routing.storeRouting
 import com.jscelle.Routing.userRouting
 import io.ktor.server.application.*
 import java.sql.*
@@ -12,6 +13,7 @@ fun Application.configureDatabases() {
     userRouting(dbConnection)
     itemsRouting(dbConnection)
     purchaseRouting(dbConnection)
+    storeRouting(dbConnection)
 }
 
 fun Application.connectToPostgres(): Connection {
